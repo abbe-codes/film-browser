@@ -1,0 +1,12 @@
+.page {
+  font-family: system-ui, Arial, sans-serif;
+  padding: 24px;
+}
+.header {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.content {
+  font-size: 16px;
+}
