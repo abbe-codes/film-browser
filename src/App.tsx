@@ -1,12 +1,11 @@
 import './styles/global.css';
+import { AppRoutes } from './routes';
 
 export function App() {
   return (
     <div className='page'>
       <header className='header'>Film Browser (SSR)</header>
-      <main className='content'>
-        <p>If you see this, SSR + hydration works.</p>
-      </main>
+      <AppRoutes />
     </div>
   );
 }

@@ -1,73 +1,47 @@
-# React + TypeScript + Vite
+# Film Browser (SSR)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A server-side rendered React application built with **Vite**, **TypeScript**, and **Express**.  
+This project demonstrates a modern **SSR + hydration** setup without using Next.js.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
 
-## React Compiler
+- **React 18**
+- **Vite** (middleware mode for SSR)
+- **TypeScript**
+- **Express** (Node.js server)
+- **Plain CSS** (no CSS modules, no Tailwind)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Features (current)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Server-side rendering using `renderToString`
+- Client-side hydration using `hydrateRoot`
+- Shared React app between server and client
+- Development SSR via Vite middleware
+- Clean ESM-based Node setup
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+> ⚠️ Routing, data fetching, and business logic will be added incrementally.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Project Structure
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+film-browser/
+├─ public/
+├─ src/
+│  ├─ assets/
+│  ├─ styles/
+│  │  └─ global.css
+│  ├─ App.tsx
+│  ├─ entry-client.tsx
+│  └─ entry-server.tsx
+├─ index.html
+├─ server.ts
+├─ vite.config.ts
+├─ tsconfig*.json
+└─ package.json
 ```
