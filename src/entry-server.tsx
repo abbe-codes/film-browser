@@ -2,6 +2,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router';
 import { App } from './App';
 import { CacheProvider } from './state/cache';
+import { WishlistProvider } from './state/wishlist';
 import { fetchFilms, fetchFilmDetails } from './api/films';
 import { InitialDataProvider } from './ssr/initialData';
 import type { InitialData } from './ssr/initialData.types';
@@ -32,7 +33,9 @@ export async function render(url: string) {
     <StaticRouter location={url}>
       <InitialDataProvider value={initialData}>
         <CacheProvider>
-          <App />
+          <WishlistProvider>
+            <App />
+          </WishlistProvider>
         </CacheProvider>
       </InitialDataProvider>
     </StaticRouter>,

@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { CacheProvider } from './state/cache';
+import { WishlistProvider } from './state/wishlist';
 import { InitialDataProvider } from './ssr/initialData';
 import type { InitialData } from './ssr/initialData.types';
 
@@ -18,7 +19,9 @@ ReactDOM.hydrateRoot(
   <BrowserRouter>
     <InitialDataProvider value={initialData}>
       <CacheProvider>
-        <App />
+        <WishlistProvider>
+          <App />
+        </WishlistProvider>
       </CacheProvider>
     </InitialDataProvider>
   </BrowserRouter>,

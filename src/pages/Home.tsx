@@ -67,6 +67,9 @@ export function Home() {
   return (
     <main>
       <h1>Home</h1>
+      <p>
+        <Link to='/wishlist'>Go to Wishlist</Link>
+      </p>
 
       {loading ? (
         <p>Loading films...</p>
@@ -84,10 +87,6 @@ export function Home() {
       ) : (
         <p>No films found.</p>
       )}
-
-      <p>
-        <Link to='/wishlist'>Go to Wishlist</Link>
-      </p>
     </main>
   );
 }

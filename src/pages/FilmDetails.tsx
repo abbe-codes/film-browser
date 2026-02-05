@@ -4,11 +4,14 @@ import { useInitialData } from '../ssr/initialData';
 import { fetchFilmDetails } from '../api/films';
 import type { FilmDetails as FilmDetailsType } from '../types/film';
 import { useCache } from '../state/cache';
+import { useWishlist } from '../state/wishlist';
 
 export function FilmDetails() {
   const { id } = useParams();
   const { filmDetails: ssrDetails } = useInitialData();
   const { state, setFilmDetails } = useCache();
+  const wishlist = useWishlist();
+  const inWishlist = id ? wishlist.has(String(id)) : false;
 
   const cached = id ? state.filmDetailsById[String(id)] : undefined;
 
@@ -92,6 +95,16 @@ export function FilmDetails() {
           ) : null}
 
           <h2>{details.title}</h2>
+
+          {id ? (
+            <button
+              type='button'
+              onClick={() => wishlist.toggle(String(id))}
+              style={{ marginBottom: '1rem' }}
+            >
+              {inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+            </button>
+          ) : null}
 
           {details.description ? <p>{details.description}</p> : null}
 
