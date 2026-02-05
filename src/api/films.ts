@@ -4,6 +4,8 @@ import type { Film, FilmDetails } from '../types/film';
 const API_BASE = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY as string;
 
+export type FilmCategory = 'popular' | 'top_rated' | 'upcoming';
+
 function withKey(url: string) {
   return `${url}?api_key=${API_KEY}`;
 }
@@ -77,4 +79,22 @@ export async function fetchFilmDetails(
   };
 
   return { ok: true, data: details };
+}
+
+export async function fetchFilmsByCategory(
+  category: FilmCategory,
+): Promise<HttpResult<Film[]>> {
+  const res = await httpGetJson<TmdbPopularResponse>(
+    withKey(`${API_BASE}/movie/${category}`),
+  );
+  if (!res.ok) return res;
+
+  const films: Film[] = res.data.results.map((m) => ({
+    id: String(m.id),
+    title: m.title,
+    year: yearFromReleaseDate(m.release_date),
+    posterUrl: posterUrl(m.poster_path),
+  }));
+
+  return { ok: true, data: films };
 }

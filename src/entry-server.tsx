@@ -3,7 +3,8 @@ import { StaticRouter } from 'react-router';
 import { App } from './App';
 import { CacheProvider } from './state/cache';
 import { WishlistProvider } from './state/wishlist';
-import { fetchFilms, fetchFilmDetails } from './api/films';
+import { fetchFilmDetails } from './api/films';
+import { fetchFilmsByCategory } from './api/films';
 import { InitialDataProvider } from './ssr/initialData';
 import type { InitialData } from './ssr/initialData.types';
 
@@ -18,8 +19,17 @@ export async function render(url: string) {
 
   // Home SSR data
   if (url === '/' || url.startsWith('/?')) {
-    const result = await fetchFilms();
-    if (result.ok) initialData.films = result.data;
+    const [popular, topRated, upcoming] = await Promise.all([
+      fetchFilmsByCategory('popular'),
+      fetchFilmsByCategory('top_rated'),
+      fetchFilmsByCategory('upcoming'),
+    ]);
+
+    initialData.categories = {
+      popular: popular.ok ? popular.data : [],
+      top_rated: topRated.ok ? topRated.data : [],
+      upcoming: upcoming.ok ? upcoming.data : [],
+    };
   }
 
   // Film details SSR data
