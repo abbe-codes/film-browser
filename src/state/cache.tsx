@@ -9,14 +9,12 @@ type CategoriesCache = {
 };
 
 type CacheState = {
-  films?: Film[];
   categories?: CategoriesCache;
   filmDetailsById: Record<string, FilmDetails | undefined>;
 };
 
 type CacheApi = {
   state: CacheState;
-  setFilms: (films: Film[]) => void;
   setCategories: (categories: CategoriesCache) => void;
   setFilmDetails: (id: string, details: FilmDetails) => void;
 };
@@ -24,7 +22,6 @@ type CacheApi = {
 const CacheContext = createContext<CacheApi | null>(null);
 
 export function CacheProvider({ children }: { children: React.ReactNode }) {
-  const [films, setFilmsState] = useState<Film[] | undefined>(undefined);
   const [categories, setCategoriesState] = useState<
     CategoriesCache | undefined
   >(undefined);
@@ -34,13 +31,12 @@ export function CacheProvider({ children }: { children: React.ReactNode }) {
 
   const api = useMemo<CacheApi>(
     () => ({
-      state: { films, categories, filmDetailsById },
-      setFilms: (f) => setFilmsState(f),
+      state: { categories, filmDetailsById },
       setCategories: (c) => setCategoriesState(c),
       setFilmDetails: (id, details) =>
         setFilmDetailsById((prev) => ({ ...prev, [id]: details })),
     }),
-    [films, categories, filmDetailsById],
+    [categories, filmDetailsById],
   );
 
   return <CacheContext.Provider value={api}>{children}</CacheContext.Provider>;
