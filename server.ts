@@ -27,10 +27,10 @@ async function createServer() {
         template = await vite.transformIndexHtml(url, template);
 
         const { render } = await vite.ssrLoadModule('/src/entry-server.tsx');
-        const { appHtml } = render(url);
+        const { appHtml, status } = render(url);
 
         const html = template.replace('<!--app-html-->', appHtml);
-        res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+        res.status(status).set({ 'Content-Type': 'text/html' }).end(html);
       } catch (e: unknown) {
         const err = e as Error;
         vite.ssrFixStacktrace(err);
