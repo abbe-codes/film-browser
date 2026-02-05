@@ -3,20 +3,24 @@ import { Link, useParams } from 'react-router-dom';
 import { useInitialData } from '../ssr/initialData';
 import { fetchFilmDetails } from '../api/films';
 import type { FilmDetails as FilmDetailsType } from '../types/film';
+import { useCache } from '../state/cache';
 
 export function FilmDetails() {
   const { id } = useParams();
-  const { filmDetails } = useInitialData();
+  const { filmDetails: ssrDetails } = useInitialData();
+  const { state, setFilmDetails } = useCache();
+
+  const cached = id ? state.filmDetailsById[String(id)] : undefined;
 
   const ssrMatches = useMemo(
-    () => filmDetails && String(filmDetails.id) === String(id),
-    [filmDetails, id],
+    () => ssrDetails && id && String(ssrDetails.id) === String(id),
+    [ssrDetails, id],
   );
 
-  const [details, setDetails] = useState<FilmDetailsType | null>(
-    ssrMatches ? filmDetails! : null,
-  );
-  const [loading, setLoading] = useState(!ssrMatches);
+  const initial = ssrMatches ? ssrDetails! : (cached ?? null);
+
+  const [details, setDetails] = useState<FilmDetailsType | null>(initial);
+  const [loading, setLoading] = useState(!initial);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -25,22 +29,32 @@ export function FilmDetails() {
     async function run() {
       if (!id) return;
 
-      // If SSR already provided the right film, use it.
+      // Prefer SSR snapshot for this id
       if (ssrMatches) {
-        setDetails(filmDetails!);
+        setFilmDetails(String(id), ssrDetails!); // seed cache
+        setDetails(ssrDetails!);
         setLoading(false);
         setError(null);
         return;
       }
 
-      // Otherwise, fetch on the client (for client-side navigation).
+      // Then cache
+      if (cached) {
+        setDetails(cached);
+        setLoading(false);
+        setError(null);
+        return;
+      }
+
+      // Otherwise fetch
       setLoading(true);
       setError(null);
 
-      const res = await fetchFilmDetails(id);
+      const res = await fetchFilmDetails(String(id));
       if (cancelled) return;
 
       if (res.ok) {
+        setFilmDetails(String(id), res.data); // store in cache
         setDetails(res.data);
         setLoading(false);
       } else {
@@ -54,7 +68,7 @@ export function FilmDetails() {
     return () => {
       cancelled = true;
     };
-  }, [id, ssrMatches, filmDetails]);
+  }, [id, ssrMatches, ssrDetails, cached, setFilmDetails]);
 
   return (
     <main>

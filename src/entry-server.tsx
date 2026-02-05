@@ -1,6 +1,7 @@
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router';
 import { App } from './App';
+import { CacheProvider } from './state/cache';
 import { fetchFilms, fetchFilmDetails } from './api/films';
 import { InitialDataProvider } from './ssr/initialData';
 import type { InitialData } from './ssr/initialData.types';
@@ -30,7 +31,9 @@ export async function render(url: string) {
   const appHtml = renderToString(
     <StaticRouter location={url}>
       <InitialDataProvider value={initialData}>
-        <App />
+        <CacheProvider>
+          <App />
+        </CacheProvider>
       </InitialDataProvider>
     </StaticRouter>,
   );
