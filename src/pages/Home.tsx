@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useInitialData } from '../ssr/initialData';
 import { useCache } from '../state/cache';
 import { fetchFilmsByCategory } from '../api/films';
+import type { FilmCategory } from '../api/films';
 import type { Film } from '../types/film';
 
 type Categories = {
@@ -11,25 +12,31 @@ type Categories = {
   upcoming?: Film[];
 };
 
-function Carousel({ title, films }: { title: string; films: Film[] }) {
+function Carousel({
+  title,
+  films,
+  category,
+}: {
+  title: string;
+  films: Film[];
+  category: FilmCategory;
+}) {
   return (
-    <section>
+    <section className='carousel'>
       <h2>{title}</h2>
       {!films.length ? (
         <p>No movies available.</p>
       ) : (
-        <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto' }}>
+        <div className='carousel-track'>
           {films.map((movie) => (
-            <div key={movie.id} style={{ minWidth: 160 }}>
+            <div key={movie.id} className='carousel-item'>
               {movie.posterUrl ? (
-                <img
-                  src={movie.posterUrl}
-                  alt={movie.title}
-                  style={{ width: '100%', marginBottom: '0.5rem' }}
-                />
+                <img src={movie.posterUrl} alt={movie.title} />
               ) : null}
 
-              <Link to={`/film/${movie.id}`}>{movie.title}</Link>
+              <Link to={`/film/${movie.id}`} state={{ category }}>
+                {movie.title}
+              </Link>
               {movie.year ? <div>{movie.year}</div> : null}
             </div>
           ))}
@@ -122,7 +129,7 @@ export function Home() {
   }, [ssrCategories, cachedCategories, setCategories]);
 
   return (
-    <main>
+    <main className='home'>
       <h1>Home</h1>
       <p>
         <Link to='/wishlist'>Go to Wishlist</Link>
@@ -134,9 +141,17 @@ export function Home() {
         <p>Failed to load movies: {error}</p>
       ) : (
         <>
-          <Carousel title='Popular Movies' films={popular} />
-          <Carousel title='Top Rated Movies' films={topRated} />
-          <Carousel title='Upcoming Movies' films={upcoming} />
+          <Carousel title='Popular Movies' films={popular} category='popular' />
+          <Carousel
+            title='Top Rated Movies'
+            films={topRated}
+            category='top_rated'
+          />
+          <Carousel
+            title='Upcoming Movies'
+            films={upcoming}
+            category='upcoming'
+          />
         </>
       )}
     </main>

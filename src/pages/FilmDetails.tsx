@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { useInitialData } from '../ssr/initialData';
 import { fetchFilmDetails } from '../api/films';
 import type { FilmDetails as FilmDetailsType } from '../types/film';
@@ -12,6 +12,15 @@ export function FilmDetails() {
   const { state, setFilmDetails } = useCache();
   const wishlist = useWishlist();
   const inWishlist = id ? wishlist.has(String(id)) : false;
+  const location = useLocation();
+  const category = (location.state as { category?: string } | null)?.category;
+
+  const categoryClass =
+    category === 'popular' ||
+    category === 'top_rated' ||
+    category === 'upcoming'
+      ? category
+      : 'popular';
 
   const cached = id ? state.filmDetailsById[String(id)] : undefined;
 
@@ -74,7 +83,7 @@ export function FilmDetails() {
   }, [id, ssrMatches, ssrDetails, cached, setFilmDetails]);
 
   return (
-    <main>
+    <main className={`film-details ${categoryClass}`}>
       <p>
         <Link to='/'>Back to Home</Link>
       </p>

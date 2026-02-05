@@ -10,3 +10,71 @@
 .content {
   font-size: 16px;
 }
+
+/**** Home page ****/
+
+.home {
+  padding: 1rem;
+}
+
+.carousel {
+  margin-bottom: 2rem;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.carousel-item {
+  min-width: 160px;
+}
+
+.carousel-item img {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/****  Film Details page ****/
+
+/* base */
+.film-details {
+  padding: 1rem;
+}
+
+/* category variants */
+.film-details.popular {
+  font-family: system-ui, sans-serif;
+}
+
+.film-details.top_rated {
+  font-family: 'Georgia', serif;
+}
+
+.film-details.upcoming {
+  font-family: 'Courier New', monospace;
+}
+
+/* buttons */
+.film-details button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.film-details.popular button {
+  background: black;
+  color: white;
+}
+
+.film-details.top_rated button {
+  background: darkgreen;
+  color: white;
+}
+
+.film-details.upcoming button {
+  background: darkorange;
+  color: black;
+}
