@@ -1,47 +1,49 @@
-# Film Browser (SSR)
+# Film Browser (SSR React + TMDB)
 
-A server-side rendered React application built with **Vite**, **TypeScript**, and **Express**.  
-This project demonstrates a modern **SSR + hydration** setup without using Next.js.
+A server-side rendered (SSR) film browsing application built with **React, TypeScript, and Vite**, using **The Movie Database (TMDB)** API.
+
+The application demonstrates SSR-first rendering with client-side navigation fallbacks, category-based carousels, film detail pages with category-specific styling, and a wishlist feature.
+
+---
+
+## Features
+
+- **Server-Side Rendering (SSR)** using Vite
+- **Home page with 3 movie carousels**:
+  - Popular Movies
+  - Top Rated Movies
+  - Upcoming Movies
+- **Film detail page** with:
+  - Poster image
+  - Description
+  - Rating
+  - Category-based visual styling
+- **Wishlist functionality**:
+  - Add / remove films
+  - Dedicated wishlist page
+- **Client-side navigation** with cache fallback (no unnecessary refetching)
+- **Category-aware UI styling** using plain CSS
+- Uses **TMDB API** for all movie data
 
 ---
 
 ## Tech Stack
 
-- **React 18**
-- **Vite** (middleware mode for SSR)
-- **TypeScript**
-- **Express** (Node.js server)
-- **Plain CSS** (no CSS modules, no Tailwind)
+- React
+- TypeScript
+- Vite
+- Express (SSR server)
+- React Router
+- TMDB API
+- Plain CSS (no frameworks)
 
 ---
 
-## Features (current)
+## Getting Started
 
-- Server-side rendering using `renderToString`
-- Client-side hydration using `hydrateRoot`
-- Shared React app between server and client
-- Development SSR via Vite middleware
-- Clean ESM-based Node setup
+### 1. Clone the repository
 
-> ⚠️ Routing, data fetching, and business logic will be added incrementally.
-
----
-
-## Project Structure
-
-```text
-film-browser/
-├─ public/
-├─ src/
-│  ├─ assets/
-│  ├─ styles/
-│  │  └─ global.css
-│  ├─ App.tsx
-│  ├─ entry-client.tsx
-│  └─ entry-server.tsx
-├─ index.html
-├─ server.ts
-├─ vite.config.ts
-├─ tsconfig*.json
-└─ package.json
+```bash
+git clone <repository-url>
+cd <repository-name>
 ```
