@@ -1,22 +1,25 @@
 import { renderToString } from 'react-dom/server';
-import { StaticRouter, matchPath } from 'react-router';
+import { StaticRouter } from 'react-router';
 import { App } from './App';
-import { routePaths } from './routes.config';
+import { fetchFilms } from './api/films';
+import { InitialDataProvider } from './ssr/initialData';
+import type { InitialData } from './ssr/initialData.types';
 
-function isKnownRoute(url: string) {
-  const pathname = url.split('?')[0].split('#')[0];
-  return routePaths.some((pattern) =>
-    matchPath({ path: pattern, end: true }, pathname),
-  );
-}
+export async function render(url: string) {
+  const initialData: InitialData = {};
 
-export function render(url: string) {
+  if (url === '/' || url.startsWith('/?')) {
+    const result = await fetchFilms();
+    if (result.ok) initialData.films = result.data;
+  }
+
   const appHtml = renderToString(
     <StaticRouter location={url}>
-      <App />
+      <InitialDataProvider value={initialData}>
+        <App />
+      </InitialDataProvider>
     </StaticRouter>,
   );
 
-  const status = isKnownRoute(url) ? 200 : 404;
-  return { appHtml, status };
+  return { appHtml, initialData };
 }

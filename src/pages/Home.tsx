@@ -1,21 +1,29 @@
 import { Link } from 'react-router-dom';
+import { useInitialData } from '../ssr/initialData';
 
 export function Home() {
+  const { films } = useInitialData();
+
   return (
     <main>
       <h1>Home</h1>
-      <p>Film list will go here.</p>
 
-      <nav>
+      {!films?.length ? (
+        <p>Loading films (SSR data not available yet)...</p>
+      ) : (
         <ul>
-          <li>
-            <Link to='/film/123'>Go to Film 123</Link>
-          </li>
-          <li>
-            <Link to='/wishlist'>Go to Wishlist</Link>
-          </li>
+          {films.map((f) => (
+            <li key={f.id}>
+              <Link to={`/film/${f.id}`}>{f.title}</Link>
+              {f.year ? ` (${f.year})` : null}
+            </li>
+          ))}
         </ul>
-      </nav>
+      )}
+
+      <p>
+        <Link to='/wishlist'>Go to Wishlist</Link>
+      </p>
     </main>
   );
 }
