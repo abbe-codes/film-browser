@@ -1,5 +1,6 @@
-import type { Film } from '../types/film';
+import type { Film, FilmDetails } from '../types/film';
 
 export type InitialData = {
   films?: Film[];
+  filmDetails?: FilmDetails;
 };

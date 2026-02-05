@@ -1,16 +1,59 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useInitialData } from '../ssr/initialData';
+import { fetchFilms } from '../api/films';
+import type { Film } from '../types/film';
 
 export function Home() {
-  const { films } = useInitialData();
+  const { films: ssrFilms } = useInitialData();
+
+  const [films, setFilms] = useState<Film[] | null>(ssrFilms ?? null);
+  const [loading, setLoading] = useState(!ssrFilms?.length);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function run() {
+      // If we already have SSR films, nothing to do.
+      if (ssrFilms?.length) {
+        setFilms(ssrFilms);
+        setLoading(false);
+        setError(null);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      const res = await fetchFilms();
+      if (cancelled) return;
+
+      if (res.ok) {
+        setFilms(res.data);
+        setLoading(false);
+      } else {
+        setFilms(null);
+        setLoading(false);
+        setError(res.message);
+      }
+    }
+
+    run();
+    return () => {
+      cancelled = true;
+    };
+  }, [ssrFilms]);
 
   return (
     <main>
       <h1>Home</h1>
 
-      {!films?.length ? (
-        <p>Loading films (SSR data not available yet)...</p>
-      ) : (
+      {loading ? (
+        <p>Loading films...</p>
+      ) : error ? (
+        <p>Failed to load films: {error}</p>
+      ) : films?.length ? (
         <ul>
           {films.map((f) => (
             <li key={f.id}>
@@ -19,6 +62,8 @@ export function Home() {
             </li>
           ))}
         </ul>
+      ) : (
+        <p>No films found.</p>
       )}
 
       <p>
